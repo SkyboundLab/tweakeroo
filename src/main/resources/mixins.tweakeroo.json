@@ -59,6 +59,7 @@
 		"MixinParticleManager",
 		"MixinPlayerAbilities",
 		"MixinPlayerEntity",
+		"MixinPresetsScreen",
 		"MixinRavagerEntity",
 		"MixinScaffoldingBlock",
 		"MixinSculkSensor",

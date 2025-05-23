@@ -37,6 +37,10 @@ public abstract class MixinGameRenderer
     private float realYaw;
     private float realPitch;
 
+    private static double currentFov = -1;
+    private static double targetFov = -1;
+    private static final double LERP_SPEED = 0.15;
+
     @Inject(method = "renderWorld", at = @At("HEAD"), cancellable = true)
     private void onRenderWorld(CallbackInfo ci)
     {
@@ -59,14 +63,32 @@ public abstract class MixinGameRenderer
     @Inject(method = "getFov", at = @At("HEAD"), cancellable = true)
     private void applyZoom(Camera camera, float partialTicks, boolean useFOVSetting, CallbackInfoReturnable<Double> cir)
     {
-        if (MiscUtils.isZoomActive())
+        boolean isZooming = MiscUtils.isZoomActive();
+        double normalFov = this.client.options.getFov().getValue();
+        double zoomFov = Configs.Generic.ZOOM_FOV.getDoubleValue();
+    
+        if (currentFov < 0) currentFov = normalFov;
+        if (targetFov < 0) targetFov = normalFov;
+    
+        if (isZooming)
         {
-            cir.setReturnValue(Configs.Generic.ZOOM_FOV.getDoubleValue());
+            targetFov = zoomFov;
         }
-        else if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
+        else
         {
-            cir.setReturnValue((double) this.client.options.getFov().getValue());
+            targetFov = normalFov;
         }
+    
+        // Smooth interpolation
+        currentFov += (targetFov - currentFov) * LERP_SPEED;
+    
+        // Clamp close differences
+        if (Math.abs(currentFov - targetFov) < 0.05)
+        {
+            currentFov = targetFov;
+        }
+    
+        cir.setReturnValue(currentFov);
     }
 
     @Redirect(method = "updateTargetedEntity", at = @At(value = "INVOKE",

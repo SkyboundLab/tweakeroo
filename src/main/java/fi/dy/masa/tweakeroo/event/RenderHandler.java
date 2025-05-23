@@ -73,10 +73,9 @@ public class RenderHandler implements IRenderer
     {
         if (stack.getItem() instanceof FilledMapItem)
         {
-            if (FeatureToggle.TWEAK_MAP_PREVIEW.getBooleanValue() &&
-                (Configs.Generic.MAP_PREVIEW_REQUIRE_SHIFT.getBooleanValue() == false || GuiBase.isShiftDown()))
+            if (FeatureToggle.TWEAK_MAP_PREVIEW.getBooleanValue())
             {
-                fi.dy.masa.malilib.render.RenderUtils.renderMapPreview(stack, x, y, Configs.Generic.MAP_PREVIEW_SIZE.getIntegerValue(), false);
+                fi.dy.masa.malilib.render.RenderUtils.renderMapPreview(stack, x, y, Configs.Generic.MAP_PREVIEW_SIZE.getIntegerValue());
             }
         }
         else if (FeatureToggle.TWEAK_SHULKERBOX_DISPLAY.getBooleanValue())

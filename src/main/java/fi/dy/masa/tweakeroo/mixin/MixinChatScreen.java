@@ -1,5 +1,6 @@
 package fi.dy.masa.tweakeroo.mixin;
 
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,7 +22,7 @@ import fi.dy.masa.tweakeroo.util.MiscUtils;
 public abstract class MixinChatScreen
 {
     @Shadow protected TextFieldWidget chatField;
-    @Mutable @Shadow private String originalChatText;
+    @Mutable @Shadow @Final private String originalChatText;
 
     @Inject(method = "removed", at = @At("HEAD"))
     private void storeChatText(CallbackInfo ci)
@@ -43,7 +44,7 @@ public abstract class MixinChatScreen
 
     @Inject(method = "keyPressed(III)Z",
             slice = @Slice(
-                    from = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ChatScreen;sendMessage(Ljava/lang/String;Z)Z")),
+                    from = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ChatScreen;sendMessage(Ljava/lang/String;)V")),
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;setScreen(Lnet/minecraft/client/gui/screen/Screen;)V", shift = Shift.AFTER))
     private void onSendMessage(int keyCode, int scancode, int modifiers, CallbackInfoReturnable<Boolean> cir)
     {

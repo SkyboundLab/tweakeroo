@@ -21,7 +21,7 @@ public abstract class MixinClientPlayNetworkHandler
             cancellable = true)
     private void onHandleSetSlot(ScreenHandlerSlotUpdateS2CPacket packet, CallbackInfo ci)
     {
-        if (PlacementTweaks.shouldSkipSlotSync(packet.getSlot(), packet.getStack()))
+        if (PlacementTweaks.shouldSkipSlotSync(packet.getSlot(), packet.getItemStack()))
         {
             ci.cancel();
         }
